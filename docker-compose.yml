@@ -17,6 +17,21 @@ services:
       start_period: 40s
     networks:
       - portfolio-network
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: portfolio-backend
+    ports:
+      - '5437:8000'
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - portfolio-network
 
 networks:
   portfolio-network:
