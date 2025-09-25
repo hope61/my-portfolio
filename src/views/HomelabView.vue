@@ -125,7 +125,7 @@ const fetchLiveStats = async () => {
 
       // Disk mapping - data.disk is "73.6%" format
       if (data.disk !== undefined) {
-        server.disk = `${data.disk} (1.65 TB of 2.25 TB)`
+        server.disk = `${data.disk} Used of 2.25 TB`
       }
 
       // Uptime mapping - data.uptime is "34d 7h" format
