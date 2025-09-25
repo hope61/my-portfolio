@@ -104,7 +104,7 @@ const getStatusIcon = (status) => {
 }
 
 // Live stats functionality
-const backendUrl = 'http://portfolio-api.dicki.org'
+const backendUrl = 'https://portfolio-api.dicki.org'
 const updateInterval = ref(null)
 const lastUpdated = ref(null)
 const isLoading = ref(false)
