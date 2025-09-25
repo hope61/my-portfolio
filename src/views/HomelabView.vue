@@ -73,36 +73,6 @@ const homelabData = ref({
   ],
 })
 
-const getStatusColor = (status) => {
-  switch (status) {
-    case 'online':
-    case 'running':
-      return '#10b981' // green
-    case 'offline':
-    case 'stopped':
-      return '#ef4444' // red
-    case 'warning':
-      return '#f59e0b' // yellow
-    default:
-      return '#6b7280' // gray
-  }
-}
-
-const getStatusIcon = (status) => {
-  switch (status) {
-    case 'online':
-    case 'running':
-      return '🟢'
-    case 'offline':
-    case 'stopped':
-      return '🔴'
-    case 'warning':
-      return '🟡'
-    default:
-      return '⚪'
-  }
-}
-
 // Live stats functionality
 const backendUrl = 'https://portfolio-api.dicki.org'
 const updateInterval = ref(null)
@@ -235,9 +205,6 @@ onUnmounted(() => {
           <div class="server-header">
             <h4 class="server-name">{{ server.name }}</h4>
             <div class="status-indicators">
-              <span class="status-indicator" :style="{ color: getStatusColor(server.status) }">
-                {{ getStatusIcon(server.status) }} {{ server.status.toUpperCase() }}
-              </span>
               <span v-if="server.isLive" class="live-indicator"> 🔴 LIVE </span>
               <span v-else-if="connectionError" class="offline-indicator"> ⚪ OFFLINE </span>
             </div>
@@ -331,9 +298,6 @@ onUnmounted(() => {
         <div v-for="service in homelabData.services" :key="service.name" class="service-card">
           <div class="service-header">
             <h4 class="service-name">{{ service.name }}</h4>
-            <span class="status-indicator" :style="{ color: getStatusColor(service.status) }">
-              {{ getStatusIcon(service.status) }} {{ service.status.toUpperCase() }}
-            </span>
           </div>
           <p class="service-description">{{ service.description }}</p>
         </div>
@@ -450,11 +414,6 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: flex-end;
   gap: 0.25rem;
-}
-
-.status-indicator {
-  font-size: 0.85rem;
-  font-weight: 600;
 }
 
 .live-indicator {
