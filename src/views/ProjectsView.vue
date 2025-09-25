@@ -18,6 +18,21 @@ const projects = ref([
     technologies: ['Python', 'Docker'],
     github: 'https://github.com/hope61/Discord-Auto-Badge',
   },
+  {
+    id: 3,
+    title: 'Novel Reader',
+    description:
+      'A website to read novels with a Python API scraper, Python backend, Vue frontend.',
+    technologies: ['Python', 'HTML', 'CSS', 'JavaScript', 'Vue', 'Sqlite'],
+    github: 'https://github.com/hope61/TbateReader',
+  },
+  {
+    id: 4,
+    title: 'Dexy Tools',
+    description: 'A collection of tools for Dexscreener.com.',
+    technologies: ['Python', 'Docker'],
+    github: 'https://github.com/hope61/Dexytools',
+  },
 ])
 </script>
 
