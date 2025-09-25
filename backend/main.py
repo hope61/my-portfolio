@@ -21,6 +21,23 @@ app = FastAPI(title="Portfolio Backend API", version="1.0.0")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:5173", 
+        "http://localhost:4173",
+        "https://dicki.org",
+        "https://www.dicki.org",
+        "https://portfolio.dicki.org",
+        "https://www.portfolio.dicki.org"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Server stats configuration
 SERVER_STATS_URL = "http://192.168.0.230:5069/stats"
 CACHE_DURATION = 5  # Cache for 30 seconds
