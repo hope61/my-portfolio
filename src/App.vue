@@ -1,44 +1,36 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import HomeView from './views/HomeView.vue'
-import TimelineView from './views/TimelineView.vue'
-import ProjectsView from './views/ProjectsView.vue'
-import ContactView from './views/ContactView.vue'
-
-// Navigation
-const activeSection = ref('home')
-const showBackToTop = ref(false)
-
-const scrollToSection = (sectionId) => {
-  activeSection.value = sectionId
-  const element = document.getElementById(sectionId)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-}
-
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
-  activeSection.value = 'home'
-}
-
-const checkScroll = () => {
-  showBackToTop.value = window.scrollY > 300
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', checkScroll)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', checkScroll)
-})
+import { useRouter } from 'vue-router'
 
 // GitHub profile link
 const githubUrl = 'https://github.com/hope61'
+const router = useRouter()
+
+// Scroll navigation function
+const scrollToSection = (sectionId) => {
+  // Check if we're on the main page
+  if (router.currentRoute.value.path === '/') {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  } else {
+    // If not on main page, navigate to main page first
+    router.push('/').then(() => {
+      setTimeout(() => {
+        const element = document.getElementById(sectionId)
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        }
+      }, 100)
+    })
+  }
+}
 </script>
 
 <template>
@@ -51,46 +43,26 @@ const githubUrl = 'https://github.com/hope61'
           <span class="logo-text">Portfolio</span>
         </div>
         <nav>
-          <a
-            href="#home"
-            @click.prevent="scrollToSection('home')"
-            class="nav-link"
-            :class="{ active: activeSection === 'home' }"
+          <router-link to="/" class="nav-link">Home</router-link>
+          <a href="#timeline" @click.prevent="scrollToSection('timeline')" class="nav-link"
+            >About</a
           >
-            Home
-          </a>
-          <a
-            href="#about"
-            @click.prevent="scrollToSection('about')"
-            class="nav-link"
-            :class="{ active: activeSection === 'about' }"
+          <a href="#timeline" @click.prevent="scrollToSection('timeline')" class="nav-link"
+            >Timeline</a
           >
-            About
-          </a>
-          <a
-            href="#timeline"
-            @click.prevent="scrollToSection('timeline')"
-            class="nav-link"
-            :class="{ active: activeSection === 'timeline' }"
+          <a href="#projects" @click.prevent="scrollToSection('projects')" class="nav-link"
+            >Projects</a
           >
-            Timeline
-          </a>
           <a
-            href="#projects"
-            @click.prevent="scrollToSection('projects')"
+            href="#certifications"
+            @click.prevent="scrollToSection('certifications')"
             class="nav-link"
-            :class="{ active: activeSection === 'projects' }"
+            >Certs</a
           >
-            Projects
-          </a>
-          <a
-            href="#contact"
-            @click.prevent="scrollToSection('contact')"
-            class="nav-link"
-            :class="{ active: activeSection === 'contact' }"
+          <router-link to="/homelab" class="nav-link">Lab</router-link>
+          <a href="#contact" @click.prevent="scrollToSection('contact')" class="nav-link"
+            >Contact</a
           >
-            Contact
-          </a>
           <a
             :href="githubUrl"
             target="_blank"
@@ -112,63 +84,18 @@ const githubUrl = 'https://github.com/hope61'
                 d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
               ></path>
             </svg>
-            GitHub
           </a>
         </nav>
       </header>
 
       <main>
-        <section id="home" class="section home-section">
-          <HomeView />
-        </section>
-
-        <section id="timeline" class="section timeline-section">
-          <div class="container">
-            <h2 class="section-title">My Journey</h2>
-            <TimelineView />
-          </div>
-        </section>
-
-        <section id="projects" class="section projects-section">
-          <div class="container">
-            <h2 class="section-title">My Projects</h2>
-            <ProjectsView />
-          </div>
-        </section>
-
-        <section id="contact" class="section contact-section">
-          <div class="container">
-            <h2 class="section-title">Contact Me</h2>
-            <ContactView />
-          </div>
-        </section>
+        <router-view />
       </main>
 
       <footer>
         <div class="footer-links"></div>
       </footer>
     </div>
-
-    <button
-      v-show="showBackToTop"
-      @click="scrollToTop"
-      class="back-to-top"
-      aria-label="Back to top"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polyline points="18 15 12 9 6 15"></polyline>
-      </svg>
-    </button>
   </div>
 </template>
 
@@ -212,6 +139,8 @@ header {
 nav {
   display: flex;
   gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .nav-link {
@@ -300,22 +229,69 @@ footer {
   transform: translateY(-3px);
 }
 
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
+/* Large tablets and small laptops */
+@media (max-width: 1024px) {
+  nav {
     gap: 1rem;
-    padding: 1rem;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+  header {
+    padding: 1.25rem 1.5rem;
   }
 
   nav {
-    width: 100%;
-    justify-content: space-between;
-    flex-wrap: wrap;
     gap: 0.75rem;
   }
 
   .nav-link {
     font-size: 0.85rem;
+    padding: 0.4rem 0;
+  }
+}
+
+/* Mobile and small tablets */
+@media (max-width: 768px) {
+  header {
+    flex-direction: row;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    min-height: auto;
+  }
+
+  .logo-text {
+    font-size: 0.85rem;
+    min-width: fit-content;
+  }
+
+  nav {
+    flex: 1;
+    justify-content: flex-end;
+    gap: 0.15rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .nav-link {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.1rem;
+    white-space: nowrap;
+    min-width: fit-content;
+  }
+
+  .github-link span {
+    display: none;
+  }
+
+  .github-link svg {
+    width: 14px;
+    height: 14px;
   }
 
   footer {
@@ -328,6 +304,56 @@ footer {
     right: 1.5rem;
     width: 40px;
     height: 40px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  header {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .logo-text {
+    font-size: 0.75rem;
+  }
+
+  nav {
+    gap: 0.1rem;
+  }
+
+  .nav-link {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.08rem;
+  }
+
+  .github-link svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  header {
+    padding: 0.3rem 0.4rem;
+  }
+
+  .logo-text {
+    font-size: 0.7rem;
+  }
+
+  nav {
+    gap: 0.08rem;
+  }
+
+  .nav-link {
+    font-size: 0.5rem;
+    padding: 0.1rem 0.05rem;
+  }
+
+  .github-link svg {
+    width: 10px;
+    height: 10px;
   }
 }
 </style>

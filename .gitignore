@@ -28,3 +28,13 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Backend
+backend/__pycache__
+backend/.conda
+backend/.venv
+backend/env
+backend/venv
+backend/pyvenv.cfg
+backend/pyvenv.cfg.bak
+backend/pyvenv.cfg.bak.bak
