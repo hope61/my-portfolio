@@ -13,6 +13,11 @@ RUN npm ci --only=production
 # Copy source code
 COPY . .
 
+# install vite
+RUN npm install -g vite
+
+# installing dependencies
+
 # Build the application
 RUN npm run build
 
