@@ -1,359 +1,355 @@
 <script setup>
-import { useRouter } from 'vue-router'
-
-// GitHub profile link
-const githubUrl = 'https://github.com/hope61'
-const router = useRouter()
-
-// Scroll navigation function
-const scrollToSection = (sectionId) => {
-  // Check if we're on the main page
-  if (router.currentRoute.value.path === '/') {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-  } else {
-    // If not on main page, navigate to main page first
-    router.push('/').then(() => {
-      setTimeout(() => {
-        const element = document.getElementById(sectionId)
-        if (element) {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          })
-        }
-      }, 100)
-    })
-  }
-}
+// Futuristic background animations
 </script>
 
 <template>
-  <div class="bg-pattern"></div>
+  <div class="lain-container">
+    <!-- Minimal Futuristic Background -->
+    <div class="minimal-background">
+      <!-- Subtle Grid -->
+      <div class="subtle-grid"></div>
 
-  <div class="app-container">
-    <div class="island-container">
-      <header>
-        <div class="logo">
-          <span class="logo-text">Portfolio</span>
-        </div>
-        <nav>
-          <router-link to="/" class="nav-link">Home</router-link>
-          <a href="#timeline" @click.prevent="scrollToSection('timeline')" class="nav-link"
-            >About</a
-          >
-          <a href="#timeline" @click.prevent="scrollToSection('timeline')" class="nav-link"
-            >Timeline</a
-          >
-          <a href="#projects" @click.prevent="scrollToSection('projects')" class="nav-link"
-            >Projects</a
-          >
-          <a
-            href="#certifications"
-            @click.prevent="scrollToSection('certifications')"
-            class="nav-link"
-            >Certs</a
-          >
-          <router-link to="/homelab" class="nav-link">Lab</router-link>
-          <a href="#contact" @click.prevent="scrollToSection('contact')" class="nav-link"
-            >Contact</a
-          >
-          <a
-            :href="githubUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="nav-link github-link"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-              ></path>
-            </svg>
-          </a>
-        </nav>
-      </header>
+      <!-- Floating Elements -->
+      <div class="floating-elements">
+        <div class="element element-1"></div>
+        <div class="element element-2"></div>
+        <div class="element element-3"></div>
+        <div class="element element-4"></div>
+        <div class="element element-5"></div>
+      </div>
 
-      <main>
+      <!-- Gentle Particles -->
+      <div class="gentle-particles">
+        <div
+          class="particle"
+          v-for="i in 12"
+          :key="i"
+          :style="{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 6}s`,
+            animationDuration: `${5 + Math.random() * 4}s`,
+          }"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Navigation -->
+      <nav class="main-nav">
+        <router-link to="/" class="nav-item">
+          <span class="nav-text">HOME</span>
+          <div class="nav-line"></div>
+        </router-link>
+        <router-link to="/homelab" class="nav-item">
+          <span class="nav-text">HOMELAB</span>
+          <div class="nav-line"></div>
+        </router-link>
+        <router-link to="/certifications" class="nav-item">
+          <span class="nav-text">CERTIFICATIONS</span>
+          <div class="nav-line"></div>
+        </router-link>
+        <router-link to="/contact" class="nav-item">
+          <span class="nav-text">CONTACT</span>
+          <div class="nav-line"></div>
+        </router-link>
+      </nav>
+
+      <!-- Content Area -->
+      <main class="content-area">
         <router-view />
       </main>
-
-      <footer>
-        <div class="footer-links"></div>
-      </footer>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* Hide scrollbar for Chrome, Safari and Opera */
-::-webkit-scrollbar {
-  display: none;
+<style>
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-html,
+/* Root Variables */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f4;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --accent: #0066cc;
+  --accent-light: #4d94ff;
+  --accent-dark: #004499;
+  --border: #e0e0e0;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Base Styles */
 body {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  background-color: var(--background-secondary);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo-text {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  background: var(--bg-primary);
   color: var(--text-primary);
-  letter-spacing: 1px;
+  overflow-x: hidden;
+  line-height: 1.6;
 }
 
-nav {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.nav-link {
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: all 0.2s ease;
+/* Lain Container */
+.lain-container {
+  min-height: 100vh;
   position: relative;
-  padding: 0.5rem 0;
-  font-size: 0.95rem;
-}
-
-.nav-link:hover {
-  color: var(--accent-color);
-}
-
-.nav-link.active {
-  color: var(--accent-color);
-}
-
-.github-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-main {
-  flex: 1;
-}
-
-.section {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  scroll-margin-top: 90px;
-}
-
-.section:not(:last-child) {
-  border-bottom: 1px solid var(--border-color);
-}
-
-footer {
-  padding: 1.5rem;
-  background-color: var(--background-secondary);
-  text-align: center;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.footer-link {
-  color: var(--text-primary);
-  transition: color 0.2s ease;
-}
-
-.footer-link:hover {
-  color: var(--accent-color);
-}
-
-/* Back to Top Button */
-.back-to-top {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background-color: var(--accent-color);
-  color: white;
-  border: none;
+  background: var(--bg-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
+}
+
+/* Minimal Background */
+.minimal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+  overflow: hidden;
+}
+
+/* Subtle Grid */
+.subtle-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 102, 204, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 102, 204, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+  z-index: 1;
+}
+
+/* Floating Elements */
+.floating-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.element {
+  position: absolute;
+  border: 1px solid rgba(0, 102, 204, 0.15);
+  animation: element-float 20s ease-in-out infinite;
+}
+
+.element-1 {
+  width: 40px;
+  height: 40px;
+  top: 20%;
+  left: 15%;
+  border-radius: 50%;
+  animation-delay: 0s;
+}
+
+.element-2 {
+  width: 30px;
+  height: 30px;
+  top: 70%;
+  left: 80%;
+  transform: rotate(45deg);
+  animation-delay: 5s;
+}
+
+.element-3 {
+  width: 50px;
+  height: 50px;
+  top: 80%;
+  left: 20%;
+  border-radius: 15px;
+  animation-delay: 10s;
+}
+
+.element-4 {
+  width: 35px;
+  height: 35px;
+  top: 30%;
+  left: 75%;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation-delay: 15s;
+}
+
+.element-5 {
+  width: 45px;
+  height: 45px;
+  top: 60%;
+  left: 10%;
+  border-radius: 50%;
+  animation-delay: 20s;
+}
+
+/* Gentle Particles */
+.gentle-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(0, 102, 204, 0.2);
+  border-radius: 50%;
+  animation: particle-float linear infinite;
+}
+
+/* Animations */
+
+@keyframes element-float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translateY(-15px) rotate(180deg);
+    opacity: 0.2;
+  }
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(100vh) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-100px) translateX(30px);
+    opacity: 0;
+  }
+}
+
+/* Main Content */
+.main-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Navigation */
+.main-nav {
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  padding: 1rem 0;
+}
+
+.nav-item {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 2px;
   transition: all 0.3s ease;
-  z-index: 100;
+  padding: 0.5rem 0;
 }
 
-.back-to-top:hover {
-  background-color: var(--accent-color-hover);
-  transform: translateY(-3px);
+.nav-item.router-link-active {
+  color: var(--accent);
 }
 
-/* Large tablets and small laptops */
-@media (max-width: 1024px) {
-  nav {
-    gap: 1rem;
-  }
-
-  .nav-link {
-    font-size: 0.9rem;
-  }
+.nav-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s ease;
 }
 
-/* Tablets */
-@media (max-width: 900px) {
-  header {
-    padding: 1.25rem 1.5rem;
-  }
-
-  nav {
-    gap: 0.75rem;
-  }
-
-  .nav-link {
-    font-size: 0.85rem;
-    padding: 0.4rem 0;
-  }
+.nav-item.router-link-active .nav-line {
+  width: 100%;
 }
 
-/* Mobile and small tablets */
+/* Content Area */
+.content-area {
+  width: 100%;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 102, 204, 0.1);
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  header {
-    flex-direction: row;
-    gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
-    min-height: auto;
+  .main-content {
+    padding: 1rem;
   }
 
-  .logo-text {
-    font-size: 0.85rem;
-    min-width: fit-content;
-  }
-
-  nav {
-    flex: 1;
-    justify-content: flex-end;
-    gap: 0.15rem;
-    flex-wrap: nowrap;
-    overflow: hidden;
-  }
-
-  .nav-link {
-    font-size: 0.6rem;
-    padding: 0.2rem 0.1rem;
-    white-space: nowrap;
-    min-width: fit-content;
-  }
-
-  .github-link span {
-    display: none;
-  }
-
-  .github-link svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  footer {
+  .main-nav {
     flex-direction: column;
     gap: 1rem;
+    align-items: center;
   }
 
-  .back-to-top {
-    bottom: 1.5rem;
-    right: 1.5rem;
-    width: 40px;
-    height: 40px;
+  .nav-item {
+    font-size: 12px;
+  }
+
+  .content-area {
+    border-radius: 15px;
+  }
+
+  .shape {
+    opacity: 0.5;
   }
 }
 
-/* Small mobile devices */
 @media (max-width: 480px) {
-  header {
-    padding: 0.4rem 0.5rem;
+  .main-nav {
+    gap: 0.5rem;
   }
 
-  .logo-text {
-    font-size: 0.75rem;
+  .nav-item {
+    font-size: 11px;
+    letter-spacing: 1px;
   }
 
-  nav {
-    gap: 0.1rem;
-  }
-
-  .nav-link {
-    font-size: 0.55rem;
-    padding: 0.15rem 0.08rem;
-  }
-
-  .github-link svg {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-/* Extra small mobile devices */
-@media (max-width: 360px) {
-  header {
-    padding: 0.3rem 0.4rem;
-  }
-
-  .logo-text {
-    font-size: 0.7rem;
-  }
-
-  nav {
-    gap: 0.08rem;
-  }
-
-  .nav-link {
-    font-size: 0.5rem;
-    padding: 0.1rem 0.05rem;
-  }
-
-  .github-link svg {
-    width: 10px;
-    height: 10px;
+  .content-area {
+    border-radius: 10px;
   }
 }
 </style>

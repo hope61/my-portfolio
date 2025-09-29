@@ -6,17 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/MainView.vue'),
-    },
-    {
-      path: '/timeline',
-      name: 'timeline',
-      component: () => import('../views/TimelineView.vue'),
-    },
-    {
-      path: '/projects',
-      name: 'projects',
-      component: () => import('../views/ProjectsView.vue'),
+      component: () => import('../views/HomeView.vue'),
     },
     {
       path: '/certifications',

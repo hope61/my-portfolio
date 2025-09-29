@@ -19,56 +19,40 @@ const homelabData = ref({
         'Portainer',
         'CasaOS',
       ],
-      status: 'online',
-      cpu: 'Loading...',
-      ram: 'Loading...',
-      disk: 'Loading...',
-      uptime: 'Loading...',
-      isLive: false,
-      portainerServices: ['Speed Test Tracker', 'Vaultwarden', 'Transmission'],
     },
   ],
   network: {
     router: 'TP-Link Archer AX50',
     switches: ['Ubiquiti Flex Mini'],
-    accessPoints: [],
-    vlans: [],
   },
   services: [
     {
       name: 'Pi-hole',
       description: 'Network-wide ad blocking and DNS filtering',
-      status: 'running',
     },
     {
       name: 'AMP Game Server',
       description: 'Game server management and automation',
-      status: 'running',
     },
     {
       name: 'Unifi',
       description: 'Network management and monitoring',
-      status: 'running',
     },
     {
       name: 'Twingate',
       description: 'Zero trust network access solution',
-      status: 'running',
     },
     {
       name: 'Immich',
       description: 'Self-hosted photo and video backup solution',
-      status: 'running',
     },
     {
       name: 'Portainer',
       description: 'Docker container management interface',
-      status: 'running',
     },
     {
       name: 'CasaOS',
       description: 'Personal cloud operating system for file sharing',
-      status: 'running',
     },
   ],
 })
@@ -184,122 +168,178 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="homelab-container">
-    <!-- Header Section -->
-    <div class="header-section">
-      <h1 class="main-title">My Homelab</h1>
+  <div class="homelab-content">
+    <!-- Header -->
+    <div class="content-header">
+      <h1 class="main-title">Homelab Infrastructure</h1>
+    </div>
 
-      <!-- Server Image -->
-      <div class="server-image-container">
-        <div class="server-image">
-          <img src="/src/assets/homelab.webp" alt="My Homelab Server Setup" />
+    <!-- Live Status - Full Width -->
+    <div class="live-status-section">
+      <div class="status-header">
+        <h2 class="status-title">Live Server Status</h2>
+        <div class="status-indicator">
+          <div
+            class="status-dot"
+            :class="{ online: homelabData.servers[0].isLive, offline: connectionError }"
+          ></div>
+          <span class="status-text">
+            {{
+              homelabData.servers[0].isLive ? 'ONLINE' : connectionError ? 'OFFLINE' : 'CONNECTING'
+            }}
+          </span>
         </div>
+      </div>
+
+      <div class="live-stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">CPU</div>
+            <div class="stat-value">{{ homelabData.servers[0].cpu }}</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Memory</div>
+            <div class="stat-value">{{ homelabData.servers[0].ram }}</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Storage</div>
+            <div class="stat-value">{{ homelabData.servers[0].disk }}</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12,6 12,12 16,14" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Uptime</div>
+            <div class="stat-value">{{ homelabData.servers[0].uptime }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="last-updated">
+        <span v-if="isLoading">Updating...</span>
+        <span v-else-if="rateLimitExceeded">Rate Limited</span>
+        <span v-else-if="connectionError">Connection Error</span>
+        <span v-else-if="lastUpdated">Last Updated: {{ lastUpdated.toLocaleTimeString() }}</span>
       </div>
     </div>
 
-    <!-- Server Section -->
-    <div class="servers-section">
-      <h3 class="subsection-title">Server Hardware & Stats</h3>
-      <div class="servers-grid">
-        <div v-for="server in homelabData.servers" :key="server.id" class="server-card">
-          <div class="server-header">
-            <h4 class="server-name">{{ server.name }}</h4>
-            <div class="status-indicators">
-              <span v-if="server.isLive" class="live-indicator"> 🔴 LIVE </span>
-              <span v-else-if="connectionError" class="offline-indicator"> ⚪ OFFLINE </span>
-            </div>
+    <!-- Main Content Grid -->
+    <div class="main-grid">
+      <!-- Left Column: Image and Services -->
+      <div class="left-column">
+        <div class="image-section">
+          <div class="image-container">
+            <img src="/src/assets/homelab.webp" alt="Homelab Server Setup" />
           </div>
-          <div class="server-specs">
-            <p><strong>Hardware:</strong> {{ server.specs }}</p>
-            <p><strong>Hypervisor:</strong> {{ server.hypervisor }}</p>
-            <p><strong>Role:</strong> {{ server.role }}</p>
-          </div>
+        </div>
 
-          <div class="server-stats">
-            <div class="stats-header">
-              <h5>System Stats:</h5>
-              <div class="stats-meta">
-                <span v-if="isLoading" class="loading-indicator">🔄 Updating...</span>
-                <span v-else-if="rateLimitExceeded" class="rate-limit-error"
-                  >⚠️ Rate limit exceeded. Please wait...</span
-                >
-                <span v-else-if="connectionError" class="connection-error"
-                  >❌ Connection error</span
-                >
-                <span v-else-if="lastUpdated" class="last-updated">
-                  Updated: {{ lastUpdated.toLocaleString() }}
-                </span>
-              </div>
-            </div>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-label">CPU Usage:</span>
-                <span class="stat-value">{{ server.cpu }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">RAM Usage:</span>
-                <span class="stat-value">{{ server.ram }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">Disk Usage:</span>
-                <span class="stat-value">{{ server.disk }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">Uptime:</span>
-                <span class="stat-value">{{ server.uptime }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="server-services">
-            <h5>Main Services:</h5>
-            <div class="services-list">
-              <span v-for="service in server.services" :key="service" class="service-tag">
-                {{ service }}
-              </span>
-            </div>
-          </div>
-
-          <div class="portainer-services" v-if="server.portainerServices">
-            <h5>Portainer Services:</h5>
-            <div class="services-list">
-              <span
-                v-for="service in server.portainerServices"
-                :key="service"
-                class="service-tag portainer-tag"
-              >
-                {{ service }}
-              </span>
+        <!-- Services -->
+        <div class="info-section">
+          <h3 class="section-title">Active Services</h3>
+          <div class="services-grid">
+            <div v-for="service in homelabData.services" :key="service.name" class="service-item">
+              <div class="service-name">{{ service.name }}</div>
+              <div class="service-description">{{ service.description }}</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Network Section -->
-    <div class="network-section">
-      <h3 class="subsection-title">Network Infrastructure</h3>
-      <div class="network-grid">
-        <div class="network-item">
-          <h4>Router</h4>
-          <p>{{ homelabData.network.router }}</p>
-        </div>
-        <div class="network-item">
-          <h4>Switch</h4>
-          <p>{{ homelabData.network.switches[0] }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Services Section -->
-    <div class="services-section">
-      <h3 class="subsection-title">Self-Hosted Services</h3>
-      <div class="services-grid">
-        <div v-for="service in homelabData.services" :key="service.name" class="service-card">
-          <div class="service-header">
-            <h4 class="service-name">{{ service.name }}</h4>
+      <!-- Right Column: Information -->
+      <div class="right-column">
+        <!-- Server Information -->
+        <div class="info-section">
+          <h3 class="section-title">Server Specifications</h3>
+          <div class="info-card">
+            <div class="info-item">
+              <span class="label">Hardware:</span>
+              <span class="value">{{ homelabData.servers[0].specs }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Hypervisor:</span>
+              <span class="value">{{ homelabData.servers[0].hypervisor }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Role:</span>
+              <span class="value">{{ homelabData.servers[0].role }}</span>
+            </div>
           </div>
-          <p class="service-description">{{ service.description }}</p>
+        </div>
+
+        <!-- Network Infrastructure -->
+        <div class="info-section">
+          <h3 class="section-title">Network Infrastructure</h3>
+          <div class="info-card">
+            <div class="info-item">
+              <span class="label">Router:</span>
+              <span class="value">{{ homelabData.network.router }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Switch:</span>
+              <span class="value">{{ homelabData.network.switches[0] }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -307,126 +347,116 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.homelab-container {
+.homelab-content {
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
 }
 
-.header-section {
-  text-align: center;
+.content-header {
   margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+  text-align: center;
 }
 
 .main-title {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 300;
   color: var(--text-primary);
-  margin-bottom: 2rem;
-  text-align: center;
-  position: relative;
-  padding-top: 2rem;
+  letter-spacing: 1px;
 }
 
-.server-image-container {
+/* Main Grid Layout */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.image-section {
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
+  align-items: center;
 }
 
-.server-image {
-  background-color: var(--background-secondary);
-  border-radius: var(--border-radius-md);
-  padding: 1rem;
-  border: 1px solid var(--border-color);
-  max-width: 600px;
+.image-container {
   width: 100%;
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s ease;
+  max-width: 300px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
-.server-image:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-}
-
-.server-image img {
+.image-container img {
   width: 100%;
   height: auto;
-  border-radius: var(--border-radius-sm);
   display: block;
 }
 
-.subsection-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 0.5rem;
-}
-
-/* Servers Section */
-.servers-section,
-.network-section,
-.services-section {
-  margin-bottom: 3rem;
-}
-
-.servers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.server-card {
-  background-color: var(--background-secondary);
-  border-radius: var(--border-radius-md);
+/* Live Status Section */
+.live-status-section {
+  background: var(--bg-secondary);
+  border-radius: 15px;
   padding: 1.5rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 102, 204, 0.1);
 }
 
-.server-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-}
-
-.server-header {
+.status-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.server-name {
-  font-size: 1.25rem;
-  font-weight: 600;
+.status-title {
+  font-size: 1.3rem;
+  font-weight: 300;
   color: var(--text-primary);
-  margin: 0;
+  letter-spacing: 1px;
 }
 
-.status-indicators {
+.status-indicator {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.live-indicator {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #dc2626;
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
   animation: pulse 2s infinite;
 }
 
-.offline-indicator {
-  font-size: 0.7rem;
+.status-dot.online {
+  background: #00cc66;
+}
+
+.status-dot.offline {
+  background: #ff4444;
+}
+
+.status-text {
+  font-size: 14px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  letter-spacing: 1px;
 }
 
 @keyframes pulse {
@@ -439,237 +469,198 @@ onUnmounted(() => {
   }
 }
 
-.server-specs {
-  margin-bottom: 1rem;
-}
-
-.server-specs p {
-  margin: 0.5rem 0;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-
-.server-stats {
-  margin-bottom: 1.5rem;
-}
-
-.stats-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.server-stats h5 {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 1rem;
-}
-
-.stats-meta {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-}
-
-.loading-indicator {
-  color: var(--accent-color);
-  font-weight: 600;
-}
-
-.last-updated {
-  font-style: italic;
-}
-
-.rate-limit-error {
-  font-size: 0.8rem;
-  color: #ff9800;
-  font-weight: 500;
-}
-
-.connection-error {
-  font-size: 0.8rem;
-  color: #f44336;
-  font-weight: 500;
-}
-
-.stats-grid {
+.live-stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.stat-item {
+.stat-card {
+  background: var(--bg-primary);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 0.75rem;
   display: flex;
-  flex-direction: column;
-  background-color: var(--background-elevated);
-  padding: 0.5rem;
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-color);
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stat-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.stat-content {
+  flex: 1;
 }
 
 .stat-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  font-size: 0.8rem;
   font-weight: 500;
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .stat-value {
-  font-size: 0.8rem;
-  color: var(--text-primary);
+  font-size: 0.9rem;
   font-weight: 600;
-  font-family: monospace;
-}
-
-.server-services,
-.portainer-services {
-  margin-bottom: 1.5rem;
-}
-
-.server-services h5,
-.portainer-services h5 {
-  margin: 0 0 0.75rem 0;
   color: var(--text-primary);
-  font-size: 1rem;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
 }
 
-.services-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.service-tag {
-  background-color: var(--background-elevated);
-  color: var(--text-primary);
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--border-radius-sm);
+.last-updated {
+  text-align: center;
   font-size: 0.75rem;
-  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-style: italic;
 }
 
-.portainer-tag {
-  background-color: var(--accent-color);
-  color: white;
-  border: 1px solid var(--accent-color);
-}
-
-/* Network Section */
-.network-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.network-item {
-  background-color: var(--background-secondary);
-  border-radius: var(--border-radius-md);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-}
-
-.network-item h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 300;
   color: var(--text-primary);
-  margin: 0 0 1rem 0;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
 }
 
-.network-item p {
+.section-title::after {
+  display: none;
+}
+
+.info-card {
+  background: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--accent);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.value {
   color: var(--text-secondary);
-  margin: 0;
+  line-height: 1.5;
+  word-break: break-word;
 }
 
-.network-item ul {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-
-.network-item li {
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-}
-
-/* Services Section */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
 }
 
-.service-card {
-  background-color: var(--background-secondary);
-  border-radius: var(--border-radius-md);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.service-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-}
-
-.service-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+.service-item {
+  background: var(--bg-secondary);
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .service-name {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--text-primary);
-  margin: 0;
+  margin-bottom: 0.25rem;
 }
 
 .service-description {
   color: var(--text-secondary);
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.3;
+  font-size: 0.8rem;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .homelab-container {
-    padding: 0 0.5rem;
+@media (max-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .main-title {
-    font-size: 2.25rem;
-  }
-
-  .subsection-title {
-    font-size: 1.25rem;
-  }
-
-  .servers-grid,
-  .network-grid,
   .services-grid {
     grid-template-columns: 1fr;
   }
+}
 
-  .server-header,
-  .service-header {
+@media (max-width: 768px) {
+  .homelab-content {
+    padding: 1rem;
+  }
+
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .live-status-section {
+    padding: 1.5rem;
+  }
+
+  .status-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    gap: 1rem;
+    text-align: center;
   }
 
-  .stats-grid {
+  .status-title {
+    font-size: 1.4rem;
+  }
+
+  .live-stats-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .server-image {
-    padding: 0.75rem;
-    max-width: 350px;
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .info-card {
+    padding: 1rem;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .label {
+    min-width: auto;
+  }
+
+  .image-container {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.8rem;
+  }
+
+  .status-title {
+    font-size: 1.2rem;
+  }
+
+  .service-item {
+    padding: 0.5rem;
+  }
+
+  .image-container {
+    max-width: 200px;
   }
 }
 </style>
