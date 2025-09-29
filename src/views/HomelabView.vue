@@ -286,22 +286,11 @@ onUnmounted(() => {
 
     <!-- Main Content Grid -->
     <div class="main-grid">
-      <!-- Left Column: Image and Services -->
+      <!-- Left Column: Image -->
       <div class="left-column">
         <div class="image-section">
           <div class="image-container">
             <img src="/src/assets/homelab.webp" alt="Homelab Server Setup" />
-          </div>
-        </div>
-
-        <!-- Services -->
-        <div class="info-section">
-          <h3 class="section-title">Active Services</h3>
-          <div class="services-grid">
-            <div v-for="service in homelabData.services" :key="service.name" class="service-item">
-              <div class="service-name">{{ service.name }}</div>
-              <div class="service-description">{{ service.description }}</div>
-            </div>
           </div>
         </div>
       </div>
@@ -339,6 +328,19 @@ onUnmounted(() => {
               <span class="label">Switch:</span>
               <span class="value">{{ homelabData.network.switches[0] }}</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services Section (Last on mobile) -->
+    <div class="services-section">
+      <div class="info-section">
+        <h3 class="section-title">Active Services</h3>
+        <div class="services-grid">
+          <div v-for="service in homelabData.services" :key="service.name" class="service-item">
+            <div class="service-name">{{ service.name }}</div>
+            <div class="service-description">{{ service.description }}</div>
           </div>
         </div>
       </div>
@@ -584,6 +586,11 @@ onUnmounted(() => {
   font-size: 0.8rem;
 }
 
+/* Services Section */
+.services-section {
+  margin-top: 2rem;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .main-grid {
@@ -593,6 +600,10 @@ onUnmounted(() => {
 
   .services-grid {
     grid-template-columns: 1fr;
+  }
+
+  .services-section {
+    margin-top: 3rem;
   }
 }
 
