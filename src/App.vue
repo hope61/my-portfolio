@@ -4,33 +4,10 @@
 
 <template>
   <div class="lain-container">
-    <!-- Minimal Futuristic Background -->
-    <div class="minimal-background">
-      <!-- Subtle Grid -->
-      <div class="subtle-grid"></div>
-
-      <!-- Floating Elements -->
-      <div class="floating-elements">
-        <div class="element element-1"></div>
-        <div class="element element-2"></div>
-        <div class="element element-3"></div>
-        <div class="element element-4"></div>
-        <div class="element element-5"></div>
-      </div>
-
-      <!-- Gentle Particles -->
-      <div class="gentle-particles">
-        <div
-          class="particle"
-          v-for="i in 12"
-          :key="i"
-          :style="{
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 6}s`,
-            animationDuration: `${5 + Math.random() * 4}s`,
-          }"
-        ></div>
-      </div>
+    <!-- Background -->
+    <div class="background">
+      <!-- Static Grid -->
+      <div class="static-grid"></div>
     </div>
 
     <!-- Main Content -->
@@ -112,8 +89,8 @@ body {
   justify-content: center;
 }
 
-/* Minimal Background */
-.minimal-background {
+/* Background */
+.background {
   position: fixed;
   top: 0;
   left: 0;
@@ -121,11 +98,10 @@ body {
   height: 100%;
   z-index: 0;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
-  overflow: hidden;
 }
 
-/* Subtle Grid */
-.subtle-grid {
+/* Static Grid */
+.static-grid {
   position: absolute;
   top: 0;
   left: 0;
@@ -136,117 +112,6 @@ body {
     linear-gradient(90deg, rgba(0, 102, 204, 0.08) 1px, transparent 1px);
   background-size: 80px 80px;
   z-index: 1;
-}
-
-/* Floating Elements */
-.floating-elements {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-}
-
-.element {
-  position: absolute;
-  border: 1px solid rgba(0, 102, 204, 0.15);
-  animation: element-float 20s ease-in-out infinite;
-}
-
-.element-1 {
-  width: 40px;
-  height: 40px;
-  top: 20%;
-  left: 15%;
-  border-radius: 50%;
-  animation-delay: 0s;
-}
-
-.element-2 {
-  width: 30px;
-  height: 30px;
-  top: 70%;
-  left: 80%;
-  transform: rotate(45deg);
-  animation-delay: 5s;
-}
-
-.element-3 {
-  width: 50px;
-  height: 50px;
-  top: 80%;
-  left: 20%;
-  border-radius: 15px;
-  animation-delay: 10s;
-}
-
-.element-4 {
-  width: 35px;
-  height: 35px;
-  top: 30%;
-  left: 75%;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  animation-delay: 15s;
-}
-
-.element-5 {
-  width: 45px;
-  height: 45px;
-  top: 60%;
-  left: 10%;
-  border-radius: 50%;
-  animation-delay: 20s;
-}
-
-/* Gentle Particles */
-.gentle-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-}
-
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: rgba(0, 102, 204, 0.2);
-  border-radius: 50%;
-  animation: particle-float linear infinite;
-}
-
-/* Animations */
-
-@keyframes element-float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.1;
-  }
-  50% {
-    transform: translateY(-15px) rotate(180deg);
-    opacity: 0.2;
-  }
-}
-
-@keyframes particle-float {
-  0% {
-    transform: translateY(100vh) translateX(0px);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.15;
-  }
-  90% {
-    opacity: 0.15;
-  }
-  100% {
-    transform: translateY(-100px) translateX(30px);
-    opacity: 0;
-  }
 }
 
 /* Main Content */
