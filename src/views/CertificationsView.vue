@@ -43,67 +43,63 @@ const openCredential = (url) => {
 </script>
 
 <template>
-  <div class="certifications-grid">
-    <div v-for="cert in certifications" :key="cert.id" class="certification-card">
-      <div class="certification-header">
-        <div class="certification-icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14,2 14,8 20,8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10,9 9,9 8,9" />
-          </svg>
-        </div>
-        <div class="certification-badge">
-          <span class="badge-text">Verified</span>
-        </div>
-      </div>
+  <div class="certifications-content">
+    <!-- Header -->
+    <div class="content-header">
+      <h1 class="main-title">Certifications</h1>
+    </div>
 
-      <div class="certification-info">
-        <h3 class="certification-title">{{ cert.title }}</h3>
-        <p class="certification-issuer">{{ cert.issuer }}</p>
-        <p class="certification-description">{{ cert.description }}</p>
-
-        <div class="certification-details">
-          <div class="detail-item">
-            <span class="detail-label">Issued:</span>
-            <span class="detail-value">{{ cert.date }}</span>
+    <!-- Certifications Grid -->
+    <div class="certifications-grid">
+      <div v-for="cert in certifications" :key="cert.id" class="certification-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+              <polyline points="14,2 14,8 20,8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
           </div>
         </div>
 
-        <div class="certification-actions">
+        <div class="cert-content">
+          <h3 class="cert-title">{{ cert.title }}</h3>
+          <div class="cert-meta">
+            <span class="cert-issuer">{{ cert.issuer }}</span>
+            <span class="cert-date">{{ cert.date }}</span>
+          </div>
+          <p class="cert-description">{{ cert.description }}</p>
+        </div>
+
+        <div class="cert-actions">
           <button
             @click="openCredential(cert.credentialUrl)"
             class="verify-button"
             :aria-label="`Verify ${cert.title} credential`"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15,3 21,3 21,9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-            Verify Credential
+            <div class="button-icon">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15,3 21,3 21,9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </div>
+            <span class="button-text">VIEW CREDENTIAL</span>
           </button>
         </div>
       </div>
@@ -112,171 +108,186 @@ const openCredential = (url) => {
 </template>
 
 <style scoped>
-.certifications-disclaimer {
-  max-width: 600px;
-  margin: 0 auto 2rem;
-  padding: 1rem 1.5rem;
-  background-color: var(--background-elevated);
-  border-radius: var(--border-radius-md);
-  border-left: 4px solid var(--accent-color);
+.certifications-content {
+  padding: 2rem;
+  max-width: 100%;
 }
 
-.certifications-disclaimer p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  font-style: italic;
+.content-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+  text-align: center;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: 1px;
 }
 
 .certifications-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .certification-card {
-  background-color: var(--background-secondary);
-  border-radius: var(--border-radius-md);
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  border: 1px solid var(--border);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
 }
 
-.certification-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
+.cert-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: rgba(0, 102, 204, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
-.certification-header {
+.cert-icon {
+  color: var(--accent);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 102, 204, 0.1);
+  border-radius: 12px;
+}
+
+.cert-content {
+  padding: 2rem;
+  flex: 1;
+}
+
+.cert-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.cert-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
-  background-color: var(--background-elevated);
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.certification-icon {
-  color: var(--accent-color);
-  display: flex;
-  align-items: center;
-}
-
-.certification-badge {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.75rem;
+.cert-issuer {
+  color: var(--accent);
   font-weight: 600;
-}
-
-.certification-info {
-  padding: 1.5rem;
-}
-
-.certification-title {
-  margin-bottom: 0.5rem;
-  font-size: 1.25rem;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.certification-issuer {
-  color: var(--accent-color);
-  font-weight: 500;
-  margin-bottom: 0.75rem;
   font-size: 0.9rem;
 }
 
-.certification-description {
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-  line-height: 1.5;
+.cert-date {
+  color: var(--text-muted);
   font-size: 0.9rem;
-}
-
-.certification-details {
-  margin-bottom: 1rem;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
-  gap: 0.5rem;
-}
-
-.detail-label {
-  color: var(--text-secondary);
   font-weight: 500;
 }
 
-.detail-value {
-  color: var(--text-primary);
-  font-weight: 600;
+.cert-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
-.certification-actions {
-  display: flex;
-  gap: 0.75rem;
+.cert-actions {
+  padding: 0 2rem 2rem;
+  margin-top: auto;
 }
 
 .verify-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--accent-color);
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  background: var(--accent);
   color: white;
   border: none;
-  border-radius: var(--border-radius-sm);
-  font-weight: 500;
+  border-radius: 12px;
   font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .verify-button:hover {
-  background-color: var(--accent-color-hover);
-  transform: translateY(-2px);
+  background: var(--accent-dark);
 }
 
-@media (max-width: 480px) {
-  .certifications-disclaimer {
-    margin: 0 1rem 2rem;
-    padding: 0.75rem 1rem;
+.button-icon {
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .certifications-content {
+    padding: 1rem;
   }
 
-  .certifications-disclaimer p {
-    font-size: 0.85rem;
+  .main-title {
+    font-size: 2rem;
   }
 
   .certifications-grid {
     grid-template-columns: 1fr;
   }
 
-  .certification-header {
+  .cert-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .cert-content {
+    padding: 1.5rem;
+  }
+
+  .cert-actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .cert-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.8rem;
+  }
+
+  .cert-header {
     padding: 0.75rem 1rem;
   }
 
-  .certification-info {
+  .cert-content {
     padding: 1rem;
   }
 
-  .certification-actions {
-    flex-direction: column;
-    align-items: stretch;
+  .cert-actions {
+    padding: 0 1rem 1rem;
   }
 
-  .verify-button {
-    justify-content: center;
+  .cert-icon {
+    width: 50px;
+    height: 50px;
   }
 }
 </style>
