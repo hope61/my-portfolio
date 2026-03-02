@@ -26,10 +26,10 @@
           <span class="nav-text">CERTIFICATIONS</span>
           <div class="nav-line"></div>
         </router-link>
-        <router-link to="/contact" class="nav-item">
+        <!--         <router-link to="/contact" class="nav-item">
           <span class="nav-text">CONTACT</span>
           <div class="nav-line"></div>
-        </router-link>
+        </router-link> -->
       </nav>
 
       <!-- Content Area -->

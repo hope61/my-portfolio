@@ -18,11 +18,11 @@ const router = createRouter({
       name: 'homelab',
       component: () => import('../views/HomelabView.vue'),
     },
-    {
+    /*     {
       path: '/contact',
       name: 'contact',
       component: () => import('../views/ContactView.vue'),
-    },
+    }, */
   ],
 })
 

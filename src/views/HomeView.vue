@@ -66,7 +66,7 @@
         <span>Certifications</span>
       </router-link>
 
-      <router-link to="/contact" class="quick-link">
+      <!--       <router-link to="/contact" class="quick-link">
         <div class="link-icon">
           <svg
             width="24"
@@ -82,7 +82,7 @@
           </svg>
         </div>
         <span>Contact</span>
-      </router-link>
+      </router-link> -->
     </div>
   </div>
 </template>
