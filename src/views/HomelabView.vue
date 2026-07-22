@@ -58,7 +58,9 @@ const homelabData = ref({
 })
 
 // Live stats functionality
-const backendUrl = 'https://portfolio-api.dicki.org'
+// Same-origin: nginx proxies /api/ to the backend container (see nginx.conf).
+// Falls back to the public API host during local `vite dev`.
+const backendUrl = import.meta.env.DEV ? 'https://portfolio-api.dicki.org' : ''
 const updateInterval = ref(null)
 const lastUpdated = ref(null)
 const isLoading = ref(false)

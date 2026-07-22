@@ -15,7 +15,15 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Rate limiter setup
-limiter = Limiter(key_func=get_remote_address)
+def client_ip(request: Request) -> str:
+    """Real client IP, honoring X-Forwarded-For set by the nginx proxy."""
+    xff = request.headers.get("x-forwarded-for")
+    if xff:
+        return xff.split(",")[0].strip()
+    return get_remote_address(request)
+
+
+limiter = Limiter(key_func=client_ip)
 app = FastAPI(title="Portfolio Backend API", version="1.0.0")
 
 # Add rate limit error handler
