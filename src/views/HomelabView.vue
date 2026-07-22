@@ -65,79 +65,51 @@ const isLoading = ref(false)
 const connectionError = ref(false)
 const rateLimitExceeded = ref(false)
 
+const applyStats = (data, timestamp) => {
+  const server = homelabData.value.servers[0]
+
+  if (data.cpu !== undefined) server.cpu = `${data.cpu} of 6 CPU(s)`
+  if (data.ram !== undefined) server.ram = `${data.ram} (15.99 GiB of 23.30 GiB)`
+  if (data.disk !== undefined) server.disk = `${data.disk} Used of 2.25 TB`
+  if (data.uptime !== undefined) server.uptime = data.uptime
+
+  server.isLive = true
+  lastUpdated.value = new Date(timestamp)
+}
+
 const fetchLiveStats = async () => {
   if (isLoading.value) return
 
   isLoading.value = true
-  connectionError.value = false
+
+  // Abort slow/hung requests (some mobile browsers never surface network errors).
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 10000)
 
   try {
-    console.log('Fetching stats from:', `${backendUrl}/api/server/stats`)
-    const response = await fetch(`${backendUrl}/api/server/stats`)
+    const response = await fetch(`${backendUrl}/api/server/stats`, {
+      signal: controller.signal,
+    })
 
-    console.log('Response status:', response.status)
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        // Rate limit exceeded
-        rateLimitExceeded.value = true
-        connectionError.value = false
-        return
-      }
-      throw new Error(`HTTP error! status: ${response.status}`)
+    if (response.status === 429) {
+      rateLimitExceeded.value = true
+      connectionError.value = false
+      return
     }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
     const result = await response.json()
-    console.log('Full API response:', result)
+    if (!result.success || !result.data) throw new Error('Malformed API response')
 
-    if (result.success && result.data) {
-      // Update server stats with live data
-      const server = homelabData.value.servers[0]
-
-      // Map the API response to your display format
-      const data = result.data
-
-      // CPU mapping - data.cpu is "1.5%" format
-      if (data.cpu !== undefined) {
-        server.cpu = `${data.cpu} of 6 CPU(s)`
-      }
-
-      // RAM mapping - data.ram is "68.9%" format
-      if (data.ram !== undefined) {
-        server.ram = `${data.ram} (15.99 GiB of 23.30 GiB)`
-      }
-
-      // Disk mapping - data.disk is "73.6%" format
-      if (data.disk !== undefined) {
-        server.disk = `${data.disk} Used of 2.25 TB`
-      }
-
-      // Uptime mapping - data.uptime is "34d 7h" format
-      if (data.uptime !== undefined) {
-        server.uptime = data.uptime
-      }
-
-      server.isLive = true
-      // Use the timestamp from the server API response
-      console.log('API timestamp:', result.timestamp)
-      console.log('Parsed timestamp:', new Date(result.timestamp))
-      lastUpdated.value = new Date(result.timestamp)
-      connectionError.value = false
-      rateLimitExceeded.value = false
-
-      console.log('Updated server stats:', {
-        cpu: server.cpu,
-        ram: server.ram,
-        disk: server.disk,
-        uptime: server.uptime,
-        isLive: server.isLive,
-      })
-    }
+    applyStats(result.data, result.timestamp)
+    connectionError.value = false
+    rateLimitExceeded.value = false
   } catch (error) {
     console.error('Failed to fetch live stats:', error)
     connectionError.value = true
     homelabData.value.servers[0].isLive = false
   } finally {
+    clearTimeout(timeout)
     isLoading.value = false
   }
 }
