@@ -8,6 +8,7 @@ import httpx
 import asyncio
 from datetime import datetime
 import logging
+import os
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -22,17 +23,28 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Add CORS middleware
+cors_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "https://dicki.org",
+    "https://www.dicki.org",
+    "https://portfolio.dicki.org",
+    "https://www.portfolio.dicki.org",
+]
+
+# Optional comma-separated override for ad-hoc origins (useful for phone/LAN testing)
+extra_origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_EXTRA_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000", 
-        "http://localhost:5173", 
-        "http://localhost:4173",
-        "https://dicki.org",
-        "https://www.dicki.org",
-        "https://portfolio.dicki.org",
-        "https://www.portfolio.dicki.org"
-    ],
+    allow_origins=cors_origins + extra_origins,
+    # Support LAN development origins, e.g. http://192.168.x.x:5173 from a phone.
+    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
