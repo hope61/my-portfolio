@@ -9,7 +9,7 @@
       <h1 class="name">Ege Musa</h1>
       <h2 class="title">Software Developer & System Administrator</h2>
       <p class="description">
-        I specialize in Python, Golang development and Linux system administration.
+        I specialize in Python, Java development and Linux system administration.
       </p>
 
       <!-- GitHub Button -->
