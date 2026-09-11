@@ -2,6 +2,14 @@
 import LiveStats from './LiveStats.vue'
 import { homelab } from '../data.js'
 import homelabImage from '../assets/homelab.webp'
+
+const rows = [
+  ['Hardware', homelab.specs],
+  ['Hypervisor', homelab.hypervisor],
+  ['Role', homelab.role],
+  ['Router', homelab.router],
+  ['Switch', homelab.switch],
+]
 </script>
 
 <template>
@@ -10,32 +18,27 @@ import homelabImage from '../assets/homelab.webp'
 
     <LiveStats />
 
-    <img :src="homelabImage" alt="The homelab server rack" />
+    <img
+      :src="homelabImage"
+      width="1600"
+      height="1200"
+      loading="lazy"
+      decoding="async"
+      alt="The homelab server rack"
+    />
 
     <dl>
-      <div class="row">
-        <dt>Hardware</dt>
-        <dd>{{ homelab.specs }}</dd>
-      </div>
-      <div class="row">
-        <dt>Hypervisor</dt>
-        <dd>{{ homelab.hypervisor }}</dd>
-      </div>
-      <div class="row">
-        <dt>Role</dt>
-        <dd>{{ homelab.role }}</dd>
-      </div>
-      <div class="row">
-        <dt>Router</dt>
-        <dd>{{ homelab.router }}</dd>
-      </div>
-      <div class="row">
-        <dt>Switch</dt>
-        <dd>{{ homelab.switch }}</dd>
+      <div v-for="[label, value] in rows" :key="label" class="row">
+        <dt>{{ label }}</dt>
+        <dd>{{ value }}</dd>
       </div>
       <div class="row">
         <dt>Services</dt>
-        <dd>{{ homelab.services.join(', ') }}</dd>
+        <dd>
+          <ul class="services">
+            <li v-for="service in homelab.services" :key="service" class="chip">{{ service }}</li>
+          </ul>
+        </dd>
       </div>
     </dl>
   </section>
@@ -60,9 +63,16 @@ dt {
 
 dd {
   flex: 1;
+  min-width: 0;
 }
 
-@media (max-width: 480px) {
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+@media (max-width: 600px) {
   .row {
     flex-direction: column;
     gap: 0;

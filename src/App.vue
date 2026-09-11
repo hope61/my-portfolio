@@ -9,11 +9,15 @@ import { profile } from './data.js'
   <main>
     <header>
       <h1>{{ profile.name }}</h1>
-      <p>{{ profile.bio }}</p>
+      <p class="bio">{{ profile.bio }}</p>
+      <p class="links">
+        <a :href="`mailto:${profile.email}`">{{ profile.email }}</a>
+        <a :href="profile.github" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
     </header>
 
-    <HomelabSection />
     <ProjectsSection />
+    <HomelabSection />
     <CertsSection />
 
     <footer>
@@ -35,8 +39,17 @@ header {
   border-bottom: 1px solid var(--rule);
 }
 
-header p {
+header .bio {
+  margin-top: var(--space-1);
   color: var(--fg-muted);
+}
+
+header .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
 }
 
 main > :deep(section) {
@@ -49,7 +62,8 @@ main > :deep(section) h2 {
 
 footer {
   display: flex;
-  gap: var(--space-3);
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
   margin-top: var(--space-8);
   padding-top: var(--space-3);
   border-top: 1px solid var(--rule);

@@ -18,7 +18,7 @@ export const projects = [
     id: 2,
     name: 'Internet situational-awareness console',
     description:
-      'Dashboard pulling 23 live OSINT feeds — BGP hijacks, CVEs, ransomware leak sites, Tor activity, submarine cables — into one keyboard-driven console that ranks what changed since you last looked. Zero npm dependencies: the HTTP server, RSS parser, DER decoder and map renderer are all written against the standard library. Every source shows its own state, so a stale feed never quietly looks like good news.',
+      'Dashboard pulling 23 live OSINT feeds — BGP hijacks, CVEs, ransomware leak sites, Tor activity, submarine cables — into one keyboard-driven console that ranks what changed since you last looked. Zero npm dependencies: the HTTP server, RSS parser, DER decoder and map renderer are all written against the standard library.',
     tech: ['Node.js', 'Vanilla JS'],
     url: 'https://github.com/hope61/blackwall',
   },
@@ -26,7 +26,7 @@ export const projects = [
     id: 3,
     name: 'Solana dip-alert Telegram bot',
     description:
-      'Self-hosted bot watching Solana token prices across four time windows and alerting on sharp drops. Prices come from on-chain state via accountSubscribe and are cross-checked against DexScreener before anything fires. Thresholds and watchlists are set through Telegram commands, so changing them needs no redeploy. 528 offline unit tests.',
+      'Self-hosted bot watching Solana token prices across four time windows and alerting on sharp drops. Prices come from on-chain state via accountSubscribe and are cross-checked against DexScreener before anything fires. 528 offline unit tests.',
     tech: ['Python 3.12', 'SQLite'],
     url: 'https://github.com/hope61/dipbot',
   },
@@ -66,7 +66,7 @@ export const projects = [
     id: 8,
     name: 'This site',
     description:
-      'Personal portfolio with the live server panel above it. A FastAPI backend queries the Proxmox API with a read-only token, caches and whitelists the fields, and nginx proxies it same-origin to the Vue frontend.',
+      'Personal portfolio with the live server panel below. A FastAPI backend queries the Proxmox API with a read-only token, caches and whitelists the fields, and nginx proxies it same-origin to the Vue frontend.',
     tech: ['Vue 3', 'FastAPI', 'Docker', 'nginx'],
     url: 'https://github.com/hope61/my-portfolio',
   },

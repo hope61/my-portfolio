@@ -1,8 +1,11 @@
 :root {
+  color-scheme: light;
+
   --fg: #111111;
   --fg-muted: #666666;
   --bg: #ffffff;
   --rule: #e5e5e5;
+  --chip: #f4f4f4;
   --link: #2b5797;
 
   /* Status colors carry information, not decoration. */
@@ -18,7 +21,7 @@
 
   --text-sm: 0.875rem;
   --text-base: 1rem;
-  --text-lg: 1.25rem;
+  --text-lg: 1.5rem;
   --text-xl: 2rem;
 
   --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
@@ -62,10 +65,12 @@ h3 {
 
 h1 {
   font-size: var(--text-xl);
+  letter-spacing: -0.02em;
 }
 
 h2 {
   font-size: var(--text-lg);
+  letter-spacing: -0.01em;
 }
 
 h3 {
@@ -94,4 +99,15 @@ img {
 
 ul {
   list-style: none;
+}
+
+/* Small monospace tag, shared by the project tech lists and homelab services. */
+.chip {
+  padding: 0.125rem var(--space-1);
+  background: var(--chip);
+  border: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--fg-muted);
 }

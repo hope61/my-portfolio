@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 // Production: same-origin, nginx proxies /api/ to the backend container (see nginx.conf).
 // Dev: point at a reachable backend via VITE_API_BASE_URL in .env.
@@ -12,6 +12,16 @@ const lastUpdated = ref(null)
 const isLoading = ref(false)
 const connectionError = ref(false)
 const rateLimitExceeded = ref(false)
+
+// One source of truth for the indicator. Rate limiting is its own state:
+// previously it left the dot reading "Connecting" forever while the line
+// below it said "Rate limited".
+const statusLabel = computed(() => {
+  if (connectionError.value) return 'Offline'
+  if (rateLimitExceeded.value) return 'Rate limited'
+  if (isLive.value) return 'Online'
+  return 'Connecting'
+})
 
 const applyStats = (data, timestamp) => {
   if (data.cpu !== undefined) stats.value.cpu = data.cpu
@@ -75,29 +85,29 @@ onUnmounted(() => {
 
 <template>
   <div class="live">
-    <div class="status">
+    <div class="status" aria-live="polite">
       <span
         class="dot"
-        :class="{ online: isLive, offline: connectionError }"
+        :class="{ online: statusLabel === 'Online', offline: connectionError }"
         aria-hidden="true"
       ></span>
-      <span>{{ isLive ? 'Online' : connectionError ? 'Offline' : 'Connecting' }}</span>
+      <span>{{ statusLabel }}</span>
     </div>
 
     <dl>
-      <div class="row">
+      <div class="stat">
         <dt>CPU</dt>
         <dd>{{ stats.cpu }}</dd>
       </div>
-      <div class="row">
+      <div class="stat">
         <dt>Memory</dt>
         <dd>{{ stats.ram }}</dd>
       </div>
-      <div class="row">
+      <div class="stat">
         <dt>Storage</dt>
         <dd>{{ stats.disk }}</dd>
       </div>
-      <div class="row">
+      <div class="stat">
         <dt>Uptime</dt>
         <dd>{{ stats.uptime }}</dd>
       </div>
@@ -105,8 +115,6 @@ onUnmounted(() => {
 
     <p class="meta">
       <span v-if="isLoading">Updating…</span>
-      <span v-else-if="rateLimitExceeded">Rate limited</span>
-      <span v-else-if="connectionError">Connection error</span>
       <span v-else-if="lastUpdated">Updated {{ lastUpdated.toLocaleTimeString() }}</span>
     </p>
   </div>
@@ -115,6 +123,8 @@ onUnmounted(() => {
 <style scoped>
 .live {
   margin-bottom: var(--space-4);
+  padding: var(--space-2);
+  border: 1px solid var(--rule);
 }
 
 .status {
@@ -129,6 +139,7 @@ onUnmounted(() => {
 .dot {
   width: 8px;
   height: 8px;
+  flex: none;
   background: var(--fg-muted);
   animation: pulse 2s infinite;
 }
@@ -139,6 +150,7 @@ onUnmounted(() => {
 
 .dot.offline {
   background: var(--down);
+  animation: none;
 }
 
 @keyframes pulse {
@@ -153,26 +165,57 @@ onUnmounted(() => {
   }
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
+dl {
+  display: grid;
+  /* auto-fit rather than a fixed 2-up: values like "512.0 GiB / 1.1 TiB" need
+     ~13rem, so the grid drops to one column before it would wrap them. */
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   gap: var(--space-2);
-  padding: var(--space-1) 0;
-  border-bottom: 1px solid var(--rule);
 }
 
 dt {
+  font-size: var(--text-sm);
   color: var(--fg-muted);
 }
 
 dd {
   font-family: var(--mono);
-  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .meta {
-  margin-top: var(--space-1);
+  /* Reserved so the first successful fetch does not shift the page. */
+  min-height: calc(var(--text-sm) * 1.6);
+  margin-top: var(--space-2);
   font-size: var(--text-sm);
   color: var(--fg-muted);
+}
+
+@media (max-width: 480px) {
+  /* One column, label and value on a shared baseline: the two-up grid is too
+     narrow for the longest values ("512.0 GiB / 1.1 TiB") and wraps them. */
+  dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stat:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  dd {
+    text-align: right;
+  }
 }
 </style>

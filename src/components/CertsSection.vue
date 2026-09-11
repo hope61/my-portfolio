@@ -19,6 +19,7 @@ import { certifications } from '../data.js'
 li {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: var(--space-2);
   padding: var(--space-1) 0;
   border-bottom: 1px solid var(--rule);
@@ -30,9 +31,10 @@ li {
   color: var(--fg-muted);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   li {
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
   }
 }
