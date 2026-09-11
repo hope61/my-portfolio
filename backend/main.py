@@ -154,6 +154,25 @@ async def _fetch_storage_totals(client: httpx.AsyncClient):
     return used, total
 
 
+async def _fetch_guest_counts(client: httpx.AsyncClient):
+    """Count running and total QEMU VMs and LXC containers on the node.
+
+    Only guests Proxmox itself manages are visible here. Docker containers
+    running inside a VM are not, so these are deliberately labelled VMs and
+    LXC rather than a single "containers" figure.
+    """
+    counts = {}
+    for kind, key in (("qemu", "vms"), ("lxc", "lxc")):
+        guests = await _pve_get(client, f"/nodes/{PVE_NODE}/{kind}")
+        if not isinstance(guests, list):
+            guests = []
+        # Templates are not running guests and would inflate the total.
+        guests = [g for g in guests if not g.get("template")]
+        running = sum(1 for g in guests if g.get("status") == "running")
+        counts[key] = f"{running} / {len(guests)}"
+    return counts
+
+
 async def fetch_server_stats():
     """Fetch node stats from the Proxmox API, with caching."""
     if not (PVE_HOST and PVE_NODE and PVE_TOKEN_ID and PVE_TOKEN_SECRET):
@@ -187,6 +206,8 @@ async def fetch_server_stats():
             else:
                 disk_used, disk_total = rootfs.get("used", 0), rootfs.get("total", 0)
 
+            guests = await _fetch_guest_counts(client)
+
             # Whitelist the fields we publish. Never pass the raw payload
             # through: it carries pveversion and kversion, which advertise
             # exactly which CVEs apply to this host.
@@ -195,6 +216,8 @@ async def fetch_server_stats():
                 "ram": _fmt_pair(memory.get("used", 0), memory.get("total", 0)),
                 "disk": _fmt_pair(disk_used, disk_total),
                 "uptime": _fmt_uptime(status.get("uptime", 0)),
+                "vms": guests["vms"],
+                "lxc": guests["lxc"],
             }
 
             stats_cache["data"] = stats_data

@@ -105,11 +105,16 @@ export const homelab = {
   services: [
     'Pi-hole',
     'AMP Game Server',
-    'Unifi',
     'Twingate',
     'Cloudflare Tunnels',
     'Immich',
     'Portainer',
-    'NextCloud',
+    'CasaOS',
+    'Wings',
+    'Vaultwarden',
+    'Homelable',
+    'Speed Tracker',
+    'Portfolio',
+    'Windows VM',
   ],
 }

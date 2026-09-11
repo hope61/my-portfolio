@@ -5,7 +5,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 // Dev: point at a reachable backend via VITE_API_BASE_URL in .env.
 const backendUrl = import.meta.env.DEV ? (import.meta.env.VITE_API_BASE_URL ?? '') : ''
 
-const stats = ref({ cpu: '—', ram: '—', disk: '—', uptime: '—' })
+const stats = ref({ cpu: '—', ram: '—', disk: '—', uptime: '—', vms: '—', lxc: '—' })
 const isLive = ref(false)
 const updateInterval = ref(null)
 const lastUpdated = ref(null)
@@ -28,6 +28,8 @@ const applyStats = (data, timestamp) => {
   if (data.ram !== undefined) stats.value.ram = data.ram
   if (data.disk !== undefined) stats.value.disk = data.disk
   if (data.uptime !== undefined) stats.value.uptime = data.uptime
+  if (data.vms !== undefined) stats.value.vms = data.vms
+  if (data.lxc !== undefined) stats.value.lxc = data.lxc
 
   isLive.value = true
   lastUpdated.value = new Date(timestamp)
@@ -110,6 +112,14 @@ onUnmounted(() => {
       <div class="stat">
         <dt>Uptime</dt>
         <dd>{{ stats.uptime }}</dd>
+      </div>
+      <div class="stat">
+        <dt>VMs</dt>
+        <dd>{{ stats.vms }}</dd>
+      </div>
+      <div class="stat">
+        <dt>LXC</dt>
+        <dd>{{ stats.lxc }}</dd>
       </div>
     </dl>
 
