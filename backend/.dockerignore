@@ -1,0 +1,10 @@
+.conda
+.venv
+env
+venv
+__pycache__
+*.pyc
+pyvenv.cfg*
+.env
+.env.*
+!.env.example

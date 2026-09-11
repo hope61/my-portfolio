@@ -38,3 +38,13 @@ backend/venv
 backend/pyvenv.cfg
 backend/pyvenv.cfg.bak
 backend/pyvenv.cfg.bak.bak
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Key material (certs, API keys) — never commit
+*.pem
+*.key
+*.p12
+*.pfx

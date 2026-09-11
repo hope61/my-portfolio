@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: my-portfolio
     ports:
-      - '3002:3000'
+      - '${FRONTEND_PORT:-3002}:3000'
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -26,10 +26,19 @@ services:
       dockerfile: Dockerfile
     container_name: portfolio-backend
     ports:
-      - '5437:8000'
+      - '${BACKEND_PORT:-5437}:8000'
     restart: unless-stopped
     environment:
       - PYTHONUNBUFFERED=1
+      - PVE_HOST=${PVE_HOST}
+      - PVE_NODE=${PVE_NODE}
+      - PVE_TOKEN_ID=${PVE_TOKEN_ID}
+      - PVE_TOKEN_SECRET=${PVE_TOKEN_SECRET}
+      - PVE_CA_PATH=${PVE_CA_PATH:-}
+      - PVE_VERIFY_SSL=${PVE_VERIFY_SSL:-true}
+      - PVE_STORAGE=${PVE_STORAGE:-}
+      - STATS_CACHE_SECONDS=${STATS_CACHE_SECONDS:-30}
+      - CORS_EXTRA_ORIGINS=${CORS_EXTRA_ORIGINS:-}
     networks:
       - portfolio-network
 
@@ -37,6 +46,3 @@ networks:
   portfolio-network:
     driver: bridge
 
-volumes:
-  nginx-logs:
-    driver: local
