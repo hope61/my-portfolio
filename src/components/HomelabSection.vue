@@ -58,8 +58,8 @@ onUnmounted(() => {
       <button type="button" class="thumb" @click="open">
         <img
           :src="topologyImage"
-          width="1400"
-          height="1848"
+          width="1391"
+          height="1838"
           loading="lazy"
           decoding="async"
           :alt="topologyAlt"
@@ -103,13 +103,11 @@ onUnmounted(() => {
   margin-bottom: var(--space-4);
 }
 
-/* The diagram is drawn on a dark canvas, so it sits in a matching panel
-   rather than floating on the page background. */
 .thumb {
   display: block;
   width: 100%;
   padding: var(--space-2);
-  background: #141414;
+  background: var(--bg);
   border: 1px solid var(--rule);
   cursor: zoom-in;
   font: inherit;
@@ -164,7 +162,9 @@ onUnmounted(() => {
 }
 
 .stage.zoomed img {
-  width: 1400px;
+  /* Natural size rather than a hardcoded width, so this cannot drift out of
+     step with the asset's own dimensions. */
+  width: auto;
   max-width: none;
   max-height: none;
   margin: 0 auto;
@@ -176,16 +176,16 @@ onUnmounted(() => {
   top: var(--space-2);
   right: var(--space-2);
   padding: var(--space-1) var(--space-2);
-  background: #141414;
-  border: 1px solid #444;
-  color: #e8e8e8;
+  background: #ffffff;
+  border: 1px solid #c8c8c8;
+  color: #111111;
   font: inherit;
   font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .close:hover {
-  background: #222;
+  background: #ebebeb;
 }
 
 .row {
