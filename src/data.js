@@ -110,7 +110,7 @@ export const homelab = {
     'Immich',
     'Portainer',
     'CasaOS',
-    'Wings',
+    'Pterodactyl',
     'Vaultwarden',
     'Homelable',
     'Speed Tracker',

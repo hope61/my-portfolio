@@ -58,8 +58,8 @@ onUnmounted(() => {
       <button type="button" class="thumb" @click="open">
         <img
           :src="topologyImage"
-          width="1391"
-          height="1838"
+          width="1600"
+          height="2090"
           loading="lazy"
           decoding="async"
           :alt="topologyAlt"
