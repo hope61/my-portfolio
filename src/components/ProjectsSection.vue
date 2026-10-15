@@ -12,6 +12,7 @@ import { projects } from '../data.js'
           <a :href="project.url" target="_blank" rel="noopener noreferrer">{{ project.name }}</a>
         </h3>
         <p class="description">{{ project.description }}</p>
+        <p v-if="project.aiNote" class="ai-note">{{ project.aiNote }}</p>
         <ul class="tech">
           <li v-for="item in project.tech" :key="item" class="chip">{{ item }}</li>
         </ul>
@@ -33,6 +34,13 @@ section > ul > li:first-child {
 .description {
   margin-top: var(--space-1);
   color: var(--fg-muted);
+}
+
+.ai-note {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  font-style: italic;
 }
 
 .tech {

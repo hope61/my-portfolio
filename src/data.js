@@ -18,7 +18,8 @@ export const projects = [
     id: 2,
     name: 'Internet situational-awareness console',
     description:
-      '!!Fully build with AI to test a workflow!! Dashboard pulling 23 live OSINT feeds — BGP hijacks, CVEs, ransomware leak sites, Tor activity, submarine cables — into one keyboard-driven console that ranks what changed since you last looked. Zero npm dependencies: the HTTP server, RSS parser, DER decoder and map renderer are all written against the standard library.',
+      'Dashboard pulling 23 live OSINT feeds — BGP hijacks, CVEs, ransomware leak sites, Tor activity, submarine cables — into one keyboard-driven console that ranks what changed since you last looked. Zero npm dependencies: the HTTP server, RSS parser, DER decoder and map renderer are all written against the standard library.',
+    aiNote: 'Built entirely with AI to test a vibe-coding workflow',
     tech: ['Node.js', 'Vanilla JS'],
     url: 'https://github.com/hope61/blackwall',
   },
