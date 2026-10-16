@@ -24,6 +24,14 @@ export const projects = [
   },
   {
     id: 3,
+    name: 'SE-programa',
+    description:
+      'Small site I made so me and the rest of the group don\'t have to squint at the timetable PDF every week. Reads schedule data from a JS file and renders it client-side.',
+    tech: ['HTML', 'CSS', 'JavaScript', 'Docker', 'nginx'],
+    url: 'https://github.com/hope61/SE-programa',
+  },
+  {
+    id: 4,
     name: 'Internet situational-awareness console',
     description:
       'Dashboard pulling 23 live OSINT feeds — BGP hijacks, CVEs, ransomware leak sites, Tor activity, submarine cables — into one keyboard-driven console that ranks what changed since you last looked. Zero npm dependencies: the HTTP server, RSS parser, DER decoder and map renderer are all written against the standard library.',
@@ -32,7 +40,7 @@ export const projects = [
     url: 'https://github.com/hope61/blackwall',
   },
   {
-    id: 4,
+    id: 5,
     name: 'Solana dip-alert Telegram bot',
     description:
       'Self-hosted bot watching Solana token prices across four time windows and alerting on sharp drops. Prices come from on-chain state via accountSubscribe and are cross-checked against DexScreener before anything fires. 528 offline unit tests.',
@@ -40,7 +48,7 @@ export const projects = [
     url: 'https://github.com/hope61/dipbot',
   },
   {
-    id: 5,
+    id: 6,
     name: 'Web novel reader',
     description:
       'Reading app with a Python API serving chapter content and a Vue frontend handling pagination, progress tracking and reading state. Includes the scraper that collects the chapters. Runs in Docker behind nginx.',
@@ -48,7 +56,7 @@ export const projects = [
     url: 'https://github.com/hope61/TbateReader',
   },
   {
-    id: 6,
+    id: 7,
     name: 'FSMP core plugin',
     description:
       "The FSMP Minecraft server's core plugin, handling custom gameplay mechanics on the Folia multithreaded server platform. Built to a paying client's requirements.",
@@ -56,7 +64,7 @@ export const projects = [
     url: 'https://github.com/hope61/FSMP-folia-core',
   },
   {
-    id: 7,
+    id: 8,
     name: 'GriefPrevention Easy GUI',
     description:
       'Plugin wrapping a widely-used Minecraft land-protection plugin, replacing its command-line interaction with an in-game menu system.',
@@ -64,7 +72,7 @@ export const projects = [
     url: 'https://github.com/hope61/GriefPreventionEasyGUI',
   },
   {
-    id: 8,
+    id: 9,
     name: 'SpearControl',
     description:
       'Server plugin letting administrators selectively disable individual behaviours of a game mechanic, with granular per-function configuration.',
@@ -72,7 +80,7 @@ export const projects = [
     url: 'https://github.com/hope61/SpearControl',
   },
   {
-    id: 9,
+    id: 10,
     name: 'This site',
     description:
       'Personal portfolio with the live server panel below. A FastAPI backend queries the Proxmox API with a read-only token, caches and whitelists the fields, and nginx proxies it same-origin to the Vue frontend.',
