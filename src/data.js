@@ -4,7 +4,7 @@ export const profile = {
   email: 'ege.musa@icloud.com',
   github: 'https://github.com/hope61',
 }
-
+// test
 export const projects = [
   {
     id: 1,
