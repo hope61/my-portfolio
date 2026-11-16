@@ -17,7 +17,7 @@ export const projects = [
     id: 2,
     name: 'GoCD',
     description:
-      'Auto-pulls your git repos and builds and runs them so you don\'t have to. Set it up once with a cron job and forget about it.',
+      'Auto-pulls your git repos and builds and runs them so you don\'t have to. Set it up once with systemd and forget about it.',
     tech: ['Golang'],
     url: 'https://github.com/hope61/GoCD',
   },
