@@ -17,8 +17,8 @@ export const projects = [
     id: 2,
     name: 'GoCD',
     description:
-      'Auto-pulls your git repos and builds and runs them so you don\'t have to. Set it up once with systemd and forget about it.',
-    tech: ['Golang'],
+      'Auto-pulls your git repos and builds and runs them so you don\'t have to. Polls on an interval or reacts to a GitHub push webhook, only runs your commands when there\'s new code, and kills any that hang past a time limit. One Go binary and one config file, running as a systemd service.',
+    tech: ['Go', 'systemd'],
     url: 'https://github.com/hope61/GoCD',
   },
   {
