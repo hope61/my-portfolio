@@ -15,11 +15,11 @@ export const projects = [
   },
   {
     id: 2,
-    name: 'GoCD',
+    name: 'TuGo',
     description:
       'Auto-pulls your git repos and builds and runs them so you don\'t have to. Polls on an interval or reacts to a GitHub push webhook, only runs your commands when there\'s new code, and kills any that hang past a time limit. One Go binary and one config file, running as a systemd service.',
     tech: ['Go', 'systemd'],
-    url: 'https://github.com/hope61/GoCD',
+    url: 'https://github.com/hope61/TuGo',
   },
   {
     id: 3,
@@ -134,5 +134,3 @@ export const homelab = {
     'Windows VM',
   ],
 }
-// test
-// test
