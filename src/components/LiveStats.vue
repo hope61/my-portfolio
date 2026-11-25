@@ -23,6 +23,25 @@ const statusLabel = computed(() => {
   return 'Connecting'
 })
 
+// htop-style meter fill, 0..1, from '9.4%' or '19.2 GiB / 31.2 GiB' (the backend's
+// _fmt_pair). Anything unparseable, like the '—' placeholder, draws an empty meter.
+const UNITS = ['B', 'KiB', 'MiB', 'GiB', 'TiB']
+const bytes = (text) => {
+  const [n, unit] = text.trim().split(' ')
+  return n * 1024 ** UNITS.indexOf(unit)
+}
+const fraction = (value) => {
+  const [used, total] = value.split(' / ')
+  const f = value.endsWith('%') ? parseFloat(value) / 100 : total ? bytes(used) / bytes(total) : 0
+  return Math.min(Math.max(f, 0), 1) || 0
+}
+
+const meters = computed(() => [
+  ['CPU', stats.value.cpu],
+  ['Mem', stats.value.ram],
+  ['Disk', stats.value.disk],
+])
+
 const applyStats = (data, timestamp) => {
   if (data.cpu !== undefined) stats.value.cpu = data.cpu
   if (data.ram !== undefined) stats.value.ram = data.ram
@@ -94,61 +113,64 @@ onUnmounted(() => {
         aria-hidden="true"
       ></span>
       <span>{{ statusLabel }}</span>
+      <span class="updated">
+        <template v-if="isLoading">updating…</template>
+        <template v-else-if="lastUpdated">updated {{ lastUpdated.toLocaleTimeString() }}</template>
+      </span>
     </div>
 
-    <dl>
-      <div class="stat">
-        <dt>CPU</dt>
-        <dd>{{ stats.cpu }}</dd>
+    <dl class="meters">
+      <div v-for="[label, value] in meters" :key="label" class="meter">
+        <dt>{{ label }}</dt>
+        <dd class="bar">
+          <!-- A long run of pipes clipped to the fill width, so it scales with the window. -->
+          <span class="fill" :style="{ width: `${fraction(value) * 100}%` }" aria-hidden="true">{{
+            '|'.repeat(200)
+          }}</span>
+          <span class="value">{{ value }}</span>
+        </dd>
       </div>
-      <div class="stat">
-        <dt>Memory</dt>
-        <dd>{{ stats.ram }}</dd>
-      </div>
-      <div class="stat">
-        <dt>Storage</dt>
-        <dd>{{ stats.disk }}</dd>
-      </div>
-      <div class="stat">
+    </dl>
+
+    <dl class="counts">
+      <div>
         <dt>Uptime</dt>
         <dd>{{ stats.uptime }}</dd>
       </div>
-      <div class="stat">
+      <div>
         <dt>VMs</dt>
         <dd>{{ stats.vms }}</dd>
       </div>
-      <div class="stat">
+      <div>
         <dt>LXC</dt>
         <dd>{{ stats.lxc }}</dd>
       </div>
     </dl>
-
-    <p class="meta">
-      <span v-if="isLoading">Updating…</span>
-      <span v-else-if="lastUpdated">Updated {{ lastUpdated.toLocaleTimeString() }}</span>
-    </p>
   </div>
 </template>
 
 <style scoped>
 .live {
-  margin-bottom: var(--space-4);
-  padding: var(--space-2);
-  border: 1px solid var(--rule);
+  margin-bottom: var(--space-2);
 }
 
 .status {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: var(--text-sm);
+  margin-bottom: var(--space-1);
+}
+
+.updated {
+  margin-left: auto;
+  /* Reserved so the first successful fetch does not shift the line. */
+  min-width: 1ch;
   color: var(--fg-muted);
-  margin-bottom: var(--space-2);
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 0.6em;
+  height: 0.6em;
   flex: none;
   background: var(--fg-muted);
   animation: pulse 2s infinite;
@@ -175,57 +197,68 @@ onUnmounted(() => {
   }
 }
 
-dl {
+.meter {
   display: grid;
-  /* auto-fit rather than a fixed 2-up: values like "512.0 GiB / 1.1 TiB" need
-     ~13rem, so the grid drops to one column before it would wrap them. */
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: var(--space-2);
+  grid-template-columns: 5ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 1ch;
 }
 
-dt {
-  font-size: var(--text-sm);
-  color: var(--fg-muted);
+.meter dt {
+  color: var(--accent);
 }
 
-dd {
-  font-family: var(--mono);
+.bar {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--ok);
+}
+
+.bar::before {
+  content: '[';
+  color: var(--fg);
+}
+
+.bar::after {
+  content: ']';
+  color: var(--fg);
+}
+
+/* Shrinks before the value does, so a full meter never pushes the value out. */
+.fill {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Inside the brackets at the right end, as htop prints it. */
+.value {
+  flex: none;
+  margin-left: auto;
+  padding-left: 1ch;
+  color: var(--fg);
   font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
 }
 
-.meta {
-  /* Reserved so the first successful fetch does not shift the page. */
-  min-height: calc(var(--text-sm) * 1.6);
-  margin-top: var(--space-2);
-  font-size: var(--text-sm);
-  color: var(--fg-muted);
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-3);
+  margin-top: var(--space-1);
 }
 
-@media (max-width: 480px) {
-  /* One column, label and value on a shared baseline: the two-up grid is too
-     narrow for the longest values ("512.0 GiB / 1.1 TiB") and wraps them. */
-  dl {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
+.counts div {
+  display: flex;
+  gap: 0.5ch;
+}
 
-  .stat {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-    padding: var(--space-1) 0;
-    border-bottom: 1px solid var(--rule);
-  }
+.counts dt {
+  color: var(--accent);
+}
 
-  .stat:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  dd {
-    text-align: right;
-  }
+.counts dt::after {
+  content: ':';
+  color: var(--fg);
 }
 </style>

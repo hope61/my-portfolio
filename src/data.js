@@ -1,18 +1,19 @@
 export const profile = {
   name: 'Ege Musa',
   bio: 'First-year Software Engineering student at Plovdiv University. Python, Java, and Linux system administration.',
+  location: 'Plovdiv, Bulgaria',
   email: 'ege.musa@icloud.com',
   github: 'https://github.com/hope61',
 }
+
+// Page layout: sections listed top to bottom per column. Reorder, move or
+// drop names here; each name maps to a component in App.vue.
+export const layout = {
+  sidebar: ['certifications'],
+  main: ['projects', 'contributions', 'activity', 'homelab'],
+}
+
 export const projects = [
-  {
-    id: 1,
-    name: 'Refurbished hardware storefront',
-    description:
-      'Online shop for prebuilt PCs and second-hand components: faceted catalogue, user accounts and order history, admin panel with product CRUD and image uploads, cash-on-delivery checkout. Sessions and PBKDF2-SHA256 hashing are hand-written, and the data layer is plain sqlite3 with no ORM.',
-    tech: ['Vue 3', 'FastAPI', 'SQLite', 'Docker', 'nginx'],
-    url: 'https://github.com/hope61/rebootpc',
-  },
   {
     id: 2,
     name: 'TuGo',
@@ -22,21 +23,20 @@ export const projects = [
     url: 'https://github.com/hope61/TuGo',
   },
   {
+    id: 1,
+    name: 'Refurbished hardware storefront',
+    description:
+      'Online shop for prebuilt PCs and second-hand components: faceted catalogue, user accounts and order history, admin panel with product CRUD and image uploads, cash-on-delivery checkout. Sessions and PBKDF2-SHA256 hashing are hand-written, and the data layer is plain sqlite3 with no ORM.',
+    tech: ['Vue 3', 'FastAPI', 'SQLite', 'Docker', 'nginx'],
+    url: 'https://github.com/hope61/rebootpc',
+  },
+  {
     id: 3,
     name: 'SE-programa',
     description:
       'Small site I made so me and the rest of the group don\'t have to squint at the timetable PDF every week. Reads schedule data from a JS file and renders it client-side.',
     tech: ['HTML', 'CSS', 'JavaScript', 'Docker', 'nginx'],
     url: 'https://github.com/hope61/SE-programa',
-  },
-  {
-    id: 4,
-    name: 'Internet situational-awareness console',
-    description:
-      'Dashboard pulling 23 live OSINT feeds — BGP hijacks, CVEs, ransomware leak sites, Tor activity, submarine cables — into one keyboard-driven console that ranks what changed since you last looked. Zero npm dependencies: the HTTP server, RSS parser, DER decoder and map renderer are all written against the standard library.',
-    aiNote: 'Built entirely with AI to test a vibe-coding workflow',
-    tech: ['Node.js', 'Vanilla JS'],
-    url: 'https://github.com/hope61/blackwall',
   },
   {
     id: 5,
