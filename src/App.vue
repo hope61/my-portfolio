@@ -35,7 +35,6 @@ onUnmounted(() => clearInterval(timer))
       <TermWindow title="about" command="neofetch">
         <header>
           <h1>{{ profile.name }}</h1>
-          <p class="handle">{{ handle }}@github</p>
           <p class="divider" aria-hidden="true">----------------</p>
           <dl class="info">
             <div>
